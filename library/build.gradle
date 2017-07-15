@@ -12,7 +12,7 @@ android {
     defaultConfig {
         versionCode 1
         versionName version
-        minSdkVersion 16
+        minSdkVersion 11
         targetSdkVersion ANDROID_BUILD_TARGET_SDK_VERSION as int
     }
 
@@ -32,6 +32,10 @@ android {
         textReport true
         abortOnError true
     }
+}
+
+dependencies {
+    compile "com.android.support:appcompat-v7:$SUPPORT_LIBRARY_VERSION"
 }
 
 apply from: rootProject.file('checkstyle.gradle')

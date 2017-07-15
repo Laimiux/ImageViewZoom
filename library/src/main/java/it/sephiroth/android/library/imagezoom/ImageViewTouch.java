@@ -217,10 +217,7 @@ public class ImageViewTouch extends ImageViewTouchBase {
     }
 
     public boolean onDown(MotionEvent e) {
-        if (getBitmapChanged()) {
-            return false;
-        }
-        return true;
+        return !getBitmapChanged();
     }
 
     public boolean onUp(MotionEvent e) {
@@ -234,10 +231,7 @@ public class ImageViewTouch extends ImageViewTouchBase {
     }
 
     public boolean onSingleTapUp(MotionEvent e) {
-        if (getBitmapChanged()) {
-            return false;
-        }
-        return true;
+        return !getBitmapChanged();
     }
 
     public boolean canScroll() {

@@ -14,7 +14,8 @@
         android:hardwareAccelerated="true"
 	    android:largeHeap="true">
         <activity android:name=".ImageViewTestActivity" 
-            android:configChanges="orientation|keyboardHidden|screenSize">
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:theme="@style/Theme.AppCompat">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

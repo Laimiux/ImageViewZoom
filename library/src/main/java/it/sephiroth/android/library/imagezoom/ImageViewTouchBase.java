@@ -12,6 +12,8 @@ import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
+import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.ViewConfiguration;
@@ -26,7 +28,7 @@ import it.sephiroth.android.library.imagezoom.utils.IDisposable;
  *
  * @author alessandro
  */
-public abstract class ImageViewTouchBase extends ImageView implements IDisposable {
+public abstract class ImageViewTouchBase extends AppCompatImageView implements IDisposable {
     public static final String VERSION = BuildConfig.VERSION_NAME;
     public static final float MIN_SCALE_DIFF = 0.1f;
 
@@ -963,7 +965,11 @@ public abstract class ImageViewTouchBase extends ImageView implements IDisposabl
                     panBy(valueX - oldValueX, valueY - oldValueY);
                     oldValueX = valueX;
                     oldValueY = valueY;
-                    postInvalidateOnAnimation();
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                        postInvalidateOnAnimation();
+                    } else {
+                        postInvalidate();
+                    }
                 }
             }
         );
@@ -1022,7 +1028,11 @@ public abstract class ImageViewTouchBase extends ImageView implements IDisposabl
                 public void onAnimationUpdate(final ValueAnimator animation) {
                     float value = (Float) animation.getAnimatedValue();
                     zoomTo(value, destX, destY);
-                    postInvalidateOnAnimation();
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                        postInvalidateOnAnimation();
+                    } else {
+                        postInvalidate();
+                    }
                 }
             }
         );

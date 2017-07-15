@@ -9,6 +9,7 @@ import android.graphics.Paint;
 import android.graphics.PixelFormat;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
 
 import java.io.InputStream;
 
@@ -46,7 +47,7 @@ public class FastBitmapDrawable extends Drawable implements IBitmapDrawable {
     }
 
     @Override
-    public void draw(Canvas canvas) {
+    public void draw(@NonNull Canvas canvas) {
         if (null != mBitmap && !mBitmap.isRecycled()) {
             final Rect bounds = getBounds();
             if (!bounds.isEmpty()) {

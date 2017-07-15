@@ -1,16 +1,17 @@
 package it.sephiroth.android.library.imagezoom.test;
 
-import android.app.Activity;
-import android.content.res.Configuration;
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore.Images;
-import android.text.TextUtils;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
@@ -20,8 +21,8 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.Toast;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import it.sephiroth.android.library.imagezoom.ImageViewTouch;
 import it.sephiroth.android.library.imagezoom.ImageViewTouch.OnImageViewTouchDoubleTapListener;
@@ -30,7 +31,7 @@ import it.sephiroth.android.library.imagezoom.ImageViewTouchBase.DisplayType;
 import it.sephiroth.android.library.imagezoom.ImageViewTouchBase.OnDrawableChangeListener;
 import it.sephiroth.android.library.imagezoom.test.utils.DecodeUtils;
 
-public class ImageViewTestActivity extends Activity {
+public class ImageViewTestActivity extends AppCompatActivity {
 
     private static final String LOG_TAG = "image-test";
 
@@ -65,7 +66,13 @@ public class ImageViewTestActivity extends Activity {
 
                 @Override
                 public void onClick(View v) {
-                    selectRandomImage(mCheckBox.isChecked());
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                        ActivityCompat.requestPermissions(ImageViewTestActivity.this,
+								new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 0);
+                    } else {
+                        // Return a successful result right away.
+                        onRequestPermissionsResult(0, new String[]{}, new int[]{PackageManager.PERMISSION_GRANTED});
+                    }
                 }
             }
         );
@@ -75,7 +82,6 @@ public class ImageViewTestActivity extends Activity {
 
                 @Override
                 public void onClick(View v) {
-
                     int current = mImage.getDisplayType().ordinal() + 1;
                     if (current >= DisplayType.values().length) {
                         current = 0;
@@ -118,17 +124,20 @@ public class ImageViewTestActivity extends Activity {
     }
 
     @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-    }
+    public void onRequestPermissionsResult(final int requestCode, @NonNull final String[] permissions, @NonNull final int[] grantResults) {
+        List<Integer> results = new ArrayList<>();
+        for (Integer result : grantResults) {
+            results.add(result);
+        }
 
-    Matrix imageMatrix;
+        if (results.contains(PackageManager.PERMISSION_GRANTED)) {
+            selectRandomImage(mCheckBox.isChecked());
+        }
+    }
 
     public void selectRandomImage(boolean small) {
         Cursor c = getContentResolver().query(Images.Media.EXTERNAL_CONTENT_URI, null, null, null, null);
         if (c != null) {
-            int count = c.getCount();
-            //int position = (int) (Math.random() * count);
             int position = 0;
             if (c.moveToPosition(position)) {
                 long id = c.getLong(c.getColumnIndex(Images.Media._ID));
@@ -144,7 +153,6 @@ public class ImageViewTestActivity extends Activity {
                 }
 
                 Bitmap bitmap = DecodeUtils.decode(this, imageUri, size, size);
-                Bitmap overlay = getOverlayBitmap("circle-black-medium.png");
 
                 if (null != bitmap) {
                     Log.d(LOG_TAG, "screen size: " + metrics.widthPixels + "x" + metrics.heightPixels);
@@ -167,39 +175,6 @@ public class ImageViewTestActivity extends Activity {
                 }
             }
             c.close();
-            return;
         }
-    }
-
-    private Bitmap getOverlayBitmap(String name) {
-        String file = null;
-
-        if (TextUtils.isEmpty(name)) {
-            try {
-                String[] files = getAssets().list("images");
-
-                if (null != files && files.length > 0) {
-                    int position = (int) (Math.random() * files.length);
-                    file = files[position];
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-                return null;
-            }
-        } else {
-            file = name;
-        }
-
-        try {
-            InputStream stream = getAssets().open("images/" + file);
-            try {
-                return BitmapFactory.decodeStream(stream);
-            } finally {
-                stream.close();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 }
