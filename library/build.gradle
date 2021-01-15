@@ -7,12 +7,11 @@ dependencies {}
 
 android {
     compileSdkVersion ANDROID_BUILD_SDK_VERSION as int
-    buildToolsVersion ANDROID_BUILD_TOOLS_VERSION
 
     defaultConfig {
         versionCode 1
         versionName version
-        minSdkVersion 11
+        minSdkVersion 21
         targetSdkVersion ANDROID_BUILD_TARGET_SDK_VERSION as int
     }
 
@@ -35,7 +34,7 @@ android {
 }
 
 dependencies {
-    compile "com.android.support:appcompat-v7:$SUPPORT_LIBRARY_VERSION"
+    compile "androidx.appcompat:appcompat:1.1.0"
 }
 
 apply from: rootProject.file('checkstyle.gradle')

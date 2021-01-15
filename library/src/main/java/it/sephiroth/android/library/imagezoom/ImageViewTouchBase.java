@@ -13,12 +13,12 @@ import android.graphics.PointF;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.ViewConfiguration;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
+import androidx.appcompat.widget.AppCompatImageView;
 
 import it.sephiroth.android.library.imagezoom.graphics.FastBitmapDrawable;
 import it.sephiroth.android.library.imagezoom.utils.IDisposable;
@@ -29,7 +29,6 @@ import it.sephiroth.android.library.imagezoom.utils.IDisposable;
  * @author alessandro
  */
 public abstract class ImageViewTouchBase extends AppCompatImageView implements IDisposable {
-    public static final String VERSION = BuildConfig.VERSION_NAME;
     public static final float MIN_SCALE_DIFF = 0.1f;
 
     public interface OnDrawableChangeListener {
